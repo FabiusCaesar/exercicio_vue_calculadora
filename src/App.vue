@@ -1,47 +1,40 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { computed, ref } from 'vue';
+import Header from './components/Header.vue';
+import Display from './components/Display.vue';
+import Form from './components/Form.vue';
+
+// Variáveis reativas
+const numA = ref(0);
+const numB = ref(0);
+const operation = ref('+');
+
+// Cálculo do resultado
+const display = computed(() => {
+    const a = numA.value;
+    const b = numB.value;
+    const op = operation.value;
+    const erroDivZero = op === '/' && b == 0;
+
+    const resultado = erroDivZero ? 'Erro. Impossível dividir por zero!' : eval(`${a} ${op} ${b}`);
+    
+    return {
+        expr: `<span style="opacity: 0.5;">${a}</span> <span style="opacity: 0.5;">${op}</span> <span style="${erroDivZero ? 'color: red;' : 'opacity: 0.5;'}">${b}</span>`,
+        result: resultado
+    };
+})
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="container d-flex flex-column justify-content-center min-vh-100" style="font-family: 'Orbitron', sans-serif;">
+        <Header />
+        <Display :display="display" />
+        <Form v-model:numA="numA" v-model:numB="numB" v-model:operation="operation" />
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
+/* Fonte Orbitron */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 </style>
